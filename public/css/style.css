@@ -1,0 +1,134 @@
+:root {
+  --white: #fff;
+  --black: #000;
+  --black-light: #222121;
+  --black-light-sidebar: #333333;
+  --light: #f6f6f6;
+  --blue: #0000ff;
+  --blue-light: #647eff;
+  --gray: #ccc;
+  --purple: #7367f0;
+  --pink: #e83e8c;
+  --red: #ea5455;
+  --ruby: #900603;
+  --orange: #ff9f43;
+  --yellow: #ffc107;
+  --yellow-light: #fffcf1;
+  --chocolate: #d2691e;
+  --beige: #f2f2d3;
+  --backgound: #f0f0f0;
+  --gray-dark: #171717;
+  --blue-neon: #00f0ff, --green-neon: #03f803, --header: 12vh;
+  --footer: 10vh;
+  --navbar: 10vh;
+  --background-login: url("../image/background.jpg");
+}
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: var(--black-light);
+}
+
+body{
+    background-color: #f4f6f9;
+    color: #333;
+    line-height: 1.6;
+}
+ul{
+    list-style: none;
+}
+a{
+    text-decoration: none;
+    color:inherit;
+}
+.search-input {
+    flex: 1;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 6px 0 0 6px; /* Bo góc bên trái */
+    outline: none;
+    font-size: 14px;
+    background-color: white;
+}
+.search-btn {
+    padding: 0px 25px;
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    border-radius: 0 6px 6px 0; /* Bo góc bên phải */
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    transition: #1a252f 0.3s ease;
+}
+.search-btn:hover {
+    background-color: #2980b9;
+}
+        footer {
+            background-color: #1a252f;
+            color: #bdc3c7;
+            padding: 30px 0;
+            font-size: 14px;
+            padding: 20px;
+        }
+        .footer-wrap {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+        .footer-col {
+            flex: 1;
+            min-width: 250px;
+            margin-bottom: 20px;
+     
+        }
+        .footer-col h4 {
+            color:#3498db;
+            margin-bottom: 15px;
+        }
+        .footer-col p,
+        .footer-col ul li a
+         {
+             color: #fff; 
+             margin-bottom: 15px; }
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #34495e;
+            margin-top: 20px;
+        }
+        .footer-bottom p{
+            color: #bdc3c7 ;
+        }
+        /* --- NÚT QUAY LẠI ĐẦU TRANG CỐ ĐỊNH --- */
+#back-to-top {
+    position: fixed;
+    bottom: 30px;       /* Cách mép dưới màn hình 30px */
+    right: 30px;        /* Cách mép phải màn hình 30px */
+    width: 45px;
+    height: 45px;
+    line-height: 43px;  /* Căn giữa mũi tên theo chiều dọc */
+    background-color: #3498db; /* Màu xanh dương đồng bộ với nút Tìm kiếm */
+    color: #ffffff;
+    text-align: center;
+    border-radius: 50%; /* Biến khung thành hình tròn */
+    font-size: 16px;
+    text-decoration: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    z-index: 9999;      /* Đảm bảo nút luôn nổi lên trên cùng các thành phần khác */
+    transition: all 0.3s ease;
+}
+
+#back-to-top:hover {
+    background-color: #2980b9; /* Đổi màu đậm hơn khi di chuột vào */
+    transform: translateY(-5px); /* Hiệu ứng nảy nhẹ lên trên */
+}
+
+/* Thêm hiệu ứng cuộn mượt mà cho toàn bộ trang web */
+html {
+    scroll-behavior: smooth;
+}
