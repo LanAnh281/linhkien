@@ -1,5 +1,5 @@
 <?php 
-  include_once "./database.php";
+  include_once "../../../database/connect.php";
     session_start();
     $query = '  select  sp.TenSanPham, sp.Gia, sp.Hinh1, sp.TenSanPham, sl.SoLuong,s.Ten
     from sanpham sp join soluong sl on sp.IDSanPham = sp.IDSanPham
@@ -7,60 +7,47 @@
     
 
 ?>
-<?php include_once "../partials/header.php"; ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang chủ </title>
+    <link rel="stylesheet" href="../../../public/css/style.css">
+<body>
+<?php include '../partials/header.php'; ?>
     
-    <div class="row mt-5">
+    <div class="container main-content">
+        
+        <!-- Khu vực hiển thị nội dung chính / Danh sách sản phẩm -->
+        <main class="articles">
+            <h3>Danh sách sản phẩm</h3>
+             <div class="grid-products">
         <?php
         if(isset($_GET['idloai'])){
             // echo $_GET['idloai'];
-            $query = $conn->prepare('  select  *
-                        from sanpham sp 
-                            where sp.IDLoai=?           ');
-           
-            
-                 $query->execute([$_GET['idloai']]);
+            $query = $conn->prepare('SELECT  * FROM sanpham sp  WHERE sp.IDLoai=?');
+            $query->execute([$_GET['idloai']]);
                 while ($row = $query->fetch()){
                     if($row['TonTai']==='1'){
                     echo '
-                        <div class="col-12 mb-3 col-md-4 col-lg-3">
-                            <a href="chitiet.php?idsp='.$row['IDSanPham'].'&idloai='.$row['IDLoai'].'" style="text-decoration:none"> 
-                            <div class="card">
-                                <div class="card-body object text-center" >
-                                    <img src="'.$row['Hinh1'].'" class="img-fluid zoom" style= "height:245px">
-                                </div>
-                                <div class="card-footer ">
-                                '.$row['TenSanPham'].' <br>';
-                    $idsp= $row['IDSanPham'];
-                                $query_size=$conn->prepare('select * from SANPHAM sp 
-                                                join SOLUONG sl on sp.IDSanPham=sl.IDSanPham
-                                                join SIZE s on s.IDSize=sl.IDSize
-                                                where sp.IDSanPham=?;');
-                                
-                                $query_size->execute([$idsp]);
-
-                                echo '<span class="my-2">Size:</span>';
-                                while ($row_size=$query_size->fetch()){
-                                    echo '
-                                     <span>'.$row_size['Ten'].' &ensp; </span>
-                    
-                                    ';
-                                }
-                                    
-                                   echo '
-                                    
-                                    <p style="color: red;">Giá: '.$row['Gia'].' &ensp;</p>
-                                </div>
-                            </div>
+                        <div class="product-card">
+                            <a href="product_items.php?idsp='.$row['IDSanPham'].'&idloai='.$row['IDLoai'].'" style="text-decoration:none">
+                                <img src="../../../public/images/logo1.png" class="img-fluid zoom" style= "height:245px">
+                                <h4>'.$row['TenSanPham'].'</h4>
+                                <p class="price">'.$row['Gia'].'</p>
                             </a>
                         </div>
+                  
                     ';}
                 }   
             };
         ?>   
         
-        
+</div>
         
     </div>
+</div>
     <!--  -->
 <?php include_once "../partials/footer.php"; ?>
 </body>
