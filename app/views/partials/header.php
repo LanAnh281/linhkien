@@ -36,7 +36,7 @@
                     }
                     ?>   
                 <li><a href="./registration.php">Đăng ký</a></li>
-                <li><a href="./signin.php">Đăng nhập</a></li>
+                <li><a href="./login.php">Đăng nhập</a></li>
                 <li><a href="./contact.php">Liên hệ</a></li>
             </ul>
         </nav>

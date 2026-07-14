@@ -1,5 +1,50 @@
 <?php 
   include_once "../../../database/connect.php";
+    require 'vendor/autoload.php'; 
+  session_start();
+
+  $error = '';
+  $success = '';
+  if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'])){
+    //làm sạch dữ liệu đầu vào
+    $name     = trim($_POST['name']);
+    $address  = trim($_POST['adress'] ?? ''); 
+    $email    = trim($_POST['email']);
+    $sdt      = trim($_POST['sdt']);
+    $password = trim($_POST['password']);
+   
+    //Dữ liệu mặc định
+    $vaiTro = 'user';
+    $hanDung = '1';
+     $query = ' INSERT INTO TAIKHOAN (HoTen, DiaChi, email, SDT, MatKhau, vaiTro,HanDung)
+      VALUES (?,?,?,?,?,?,?)';
+      try{
+        $sth = $conn->prepare($query);
+        $sth->execute([
+          $name,
+                $address,
+                $email,
+                $sdt,
+                md5($password), 
+                $vaiTro,
+                $hanDung
+        ]);
+        $success = 'Đăng ký tài khoản thành công!';
+      
+
+// Khai báo sử dụng các lớp của PHPMailer
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+$mail = new PHPMailer(true);
+
+        //Chuyển sang trang đăng nhập 
+        header("refresh:2; url=login.php");
+    }
+    catch (PDOException $e){
+        $error = 'Đã xảy ra lỗi hệ thống. Vui lòng thử lại sau!';
+    }
+  }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -17,67 +62,87 @@
 <body>
 <?php include '../partials/header.php'; ?>
    
-    <div class="card mt-5">
-        <div class="card-header">
-            <h3 class="text-center">Đăng ký thành viên</h3>
-        </div>
-        <div class="card-body">
-            <form id="signupForm" action="signin.php" method="post" class="form-horizontal" action="#">
+  <div class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="bg-white p-4 p-md-5 rounded shadow-sm border">
+                    
+                    <h2 class="text-center font-weight-bold text-dark mb-5">Đăng ký thành viên</h2>
+                    
+                    <?php if (!empty($error)): ?>
+                        <div class="alert alert-danger text-center mb-4"><?= $error ?></div>
+                    <?php endif; ?>
+                    <?php if (!empty($success)): ?>
+                        <div class="alert alert-success text-center mb-4"><?= $success ?></div>
+                    <?php endif; ?>
 
-                <div class="form-group row">
-                    <label class="col-sm-4 col-form-label" for="name">Họ và tên</label>
-                    <div class="col-sm-5">
-                        <input type="text" class="form-control" id="name" name="name" placeholder="Họ và tên của bạn" />
-                    </div>
+                    <form id="signupForm" action="" method="post">
+
+                        <div class="form-group row align-items-center mb-4">
+                            <label class="col-sm-4 font-weight-bold text-secondary mb-sm-0" for="name">Họ và tên <span class="text-danger">*</span></label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="name" name="name" placeholder="Họ và tên của bạn" value="<?= isset($name) ? htmlspecialchars($name) : '' ?>" />
+                            </div>
+                        </div>
+
+                        <div class="form-group row align-items-center mb-4">
+                            <label class="col-sm-4 font-weight-bold text-secondary mb-sm-0" for="adress">Địa chỉ</label>
+                            <div class="col-sm-8">
+                                <textarea class="form-control" id="adress" name="adress" rows="3" placeholder="Địa chỉ của bạn"><?= isset($address) ? htmlspecialchars($address) : '' ?></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-group row align-items-center mb-4">
+                            <label class="col-sm-4 font-weight-bold text-secondary mb-sm-0" for="sdt">SĐT <span class="text-danger">*</span></label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="sdt" name="sdt" placeholder="SĐT của bạn" value="<?= isset($sdt) ? htmlspecialchars($sdt) : '' ?>" />
+                            </div>
+                        </div>
+
+                        <div class="form-group row align-items-center mb-4">
+                            <label class="col-sm-4 font-weight-bold text-secondary mb-sm-0" for="email">Hộp thư điện tử <span class="text-danger">*</span></label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="email" name="email" placeholder="Hộp thư điện tử" value="<?= isset($email) ? htmlspecialchars($email) : '' ?>" />
+                            </div>
+                        </div>
+
+                       <div class="form-group row align-items-center mb-4">
+                            <label class="col-sm-4 font-weight-bold text-secondary mb-sm-0" for="password">Mật khẩu <span class="text-danger">*</span></label>
+                            <div class="col-sm-8">
+                                <div class="input-group">
+                                    <input type="password" class="form-control" id="password" name="password" placeholder="Mật khẩu" />
+                                    <div class="input-group-append">
+                                        <span class="input-group-text bg-white border-left-0 toggle-password" style="cursor: pointer;" data-target="#password">
+                                            <i class="fas fa-eye text-secondary"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row align-items-center mb-4">
+                            <label class="col-sm-4 font-weight-bold text-secondary mb-sm-0" for="confirm_password">Nhập lại mật khẩu <span class="text-danger">*</span></label>
+                            <div class="col-sm-8">
+                                <div class="input-group">
+                                    <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="Nhập lại mật khẩu" />
+                                    <div class="input-group-append">
+                                        <span class="input-group-text bg-white border-left-0 toggle-password" style="cursor: pointer;" data-target="#confirm_password">
+                                            <i class="fas fa-eye text-secondary"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row mt-5 mb-0">
+                            <div class="col-sm-8 offset-sm-4">
+                                <button type="submit" class="btn btn-primary btn-block py-2 font-weight-bold" name="registration" value="Registration">Đăng ký</button>
+                            </div>
+                        </div>
+
+                    </form>
                 </div>
-
-                <div class="form-group row">
-                    <label class="col-sm-4 col-form-label" for="diachi">Địa chỉ</label>
-                    <div class="col-sm-5">
-                        <input type="text" class="form-control" id="diachi" name="diachi"
-                            placeholder="Địa chỉ của bạn" />
-                    </div>
-                </div>
-
-                <div class="form-group row">
-                    <label class="col-sm-4 col-form-label" for="username">SĐT</label>
-                    <div class="col-sm-5">
-                        <input type="text" class="form-control" id="sdt" name="sdt" placeholder="SĐT của bạn" />
-                    </div>
-                </div>
-
-                <div class="form-group row">
-                    <label class="col-sm-4 col-form-label" for="email">Hộp thư điện tử</label>
-                    <div class="col-sm-5">
-                        <input type="text" class="form-control" id="email" name="email" placeholder="Hộp thư điện tử" />
-                    </div>
-                </div>
-
-                <div class="form-group row">
-                    <label class="col-sm-4 col-form-label" for="password">Mật khẩu</label>
-                    <div class="col-sm-5">
-                        <input type="password" class="form-control" id="password" name="password"
-                            placeholder="Mật khẩu" />
-                    </div>
-                </div>
-
-                <div class="form-group row">
-                    <label class="col-sm-4 col-form-label" for="confirm_password">Nhập lại mật khẩu</label>
-                    <div class="col-sm-5">
-                        <input type="password" class="form-control" id="confirm_password" name="confirm_password"
-                            placeholder="Nhập lại mật khẩu" />
-                    </div>
-                </div>
-
-
-
-                <div class="row">
-                    <div class="col-sm-5 offset-sm-4">
-                        <button type="submit" class="btn btn-primary" name="signup" value="Sign up">Đăng ký</button>
-                    </div>
-                </div>
-
-            </form>
+            </div>
         </div>
     </div>
 
@@ -141,6 +206,24 @@
         });
 
     });
+    $(document).ready(function() {
+    // Logic xử lý ẩn/hiện mật khẩu khi bấm vào con mắt
+    $('.toggle-password').click(function() {
+        // Lấy ID của ô input cần đổi qua thuộc tính data-target
+        var targetInput = $(this).attr('data-target');
+        var inputField = $(targetInput);
+        var icon = $(this).find('i');
+
+        // Kiểm tra loại của input để chuyển đổi
+        if (inputField.attr('type') === 'password') {
+            inputField.attr('type', 'text'); // Hiện mật khẩu
+            icon.removeClass('fa-eye').addClass('fa-eye-slash'); // Đổi icon thành mắt gạch chéo
+        } else {
+            inputField.attr('type', 'password'); // Ẩn mật khẩu
+            icon.removeClass('fa-eye-slash').addClass('fa-eye'); // Đổi icon lại thành mắt thường
+        }
+    });
+});
     </script>
    
 <?php include_once "../partials/footer.php"; ?>
