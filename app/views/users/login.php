@@ -12,19 +12,19 @@ if (isset($_POST['email']) && isset($_POST['matkhau'])) {
         $error = 'Vui lòng nhập đầy đủ tài khoản và mật khẩu!';
     } else {
       // Tìm kiếm tài khoản
-        $query = 'SELECT * FROM TAIKHOAN WHERE Email = ? AND Matkhau = ?;';
+        $query = 'SELECT * FROM NGUOIDUNG nd JOIN VAITRO vt ON nd.vaiTroId = vt.vaiTroId WHERE nd.email = ? AND nd.matkhau = ?;';
         
         $sth = $conn->prepare($query);
-        $sth->execute([$username, md5($password)]);
+        $sth->execute([$username, $password]);
         
         // Dùng fetch(PDO::FETCH_ASSOC) để lấy mảng key-value
         if ($row = $sth->fetch(PDO::FETCH_ASSOC)) { 
          
             // Tạo SESSION 
-            $_SESSION['username'] = $username;
-            $_SESSION['user_id'] = $row['IDTaiKhoan']; 
+            $_SESSION['username'] = $row['hoTen'];
+            $_SESSION['user_id'] = $row['nguoiDungId']; 
             $_SESSION['logged_in_time'] = time();
-            $_SESSION['role'] = $row['VaiTro'];
+            $_SESSION['role'] = $row['tenVaiTro'];
             $_SESSION['success_message'] = 'Đăng nhập thành công!';
             echo  $_SESSION['role'];
             // Chuyển hướng sang trang chủ

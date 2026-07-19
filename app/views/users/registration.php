@@ -19,31 +19,24 @@ session_start();
     $name     = trim($_POST['name']);
     $address  = trim($_POST['adress'] ?? ''); 
     $email    = trim($_POST['email']);
-    $sdt      = trim($_POST['sdt']);
+    $phone    = trim($_POST['phone']);
     $password = trim($_POST['password']);
    
     //Dữ liệu mặc định
-    $vaiTro = 'user';
-    $hanDung = '1';
-     $query = ' INSERT INTO TAIKHOAN (HoTen, DiaChi, email, SDT, MatKhau, vaiTro,HanDung)
-      VALUES (?,?,?,?,?,?,?)';
+    $queryVaiTro = 'SELECT * FROM VAITRO WHERE tenVaiTro ="user" ;';
+    $sthVaiTro = $conn ->prepare($queryVaiTro);
+    $sthVaiTro->execute();
+    $role =$sthVaiTro->fetchColumn();
+    $status = '1';
+    $query =    'INSERT INTO NGUOIDUNG (hoTen, email, matKhau, soDienThoai, trangThai, DiaChi,vaiTroId)
+                VALUES (?,?,?,?,?,?,?)';
       try{
         $sth = $conn->prepare($query);
-        $sth->execute([
-          $name,
-                $address,
-                $email,
-                $sdt,
-                md5($password), 
-                $vaiTro,
-                $hanDung
-        ]);
+        $sth->execute([$name,$email,$password, $phone, $status, $address, $role]);
         $success = 'Đăng ký tài khoản thành công!';
       
         //Chuyển sang trang đăng nhập 
         header("refresh:2; url=login.php");
-
-       
 
         // Khởi tạo đối tượng PHPMailer
         $mail = new PHPMailer(true);
@@ -53,7 +46,7 @@ session_start();
             $mail->isSMTP();                                            // Sử dụng SMTP để gửi mail
             $mail->Host       = 'smtp.gmail.com';                       // Server SMTP của Gmail
             $mail->SMTPAuth   = true;                                   // Bật xác thực SMTP
-            $mail->Username   = 'anh626801@gmail.com';             // Tài khoản Gmail của bạn
+            $mail->Username   = 'anh626801@gmail.com';                  // Tài khoản Gmail của bạn
             $mail->Password   = 'qhjr klyj nqsc snjv';                  // Mật khẩu ứng dụng 16 ký tự vừa tạo ở Bước 1
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;          // Mã hóa TLS (Khuyên dùng)
             $mail->Port       = 587;                                    // Cổng kết nối TLS (nếu dùng SSL thì cổng 465)
@@ -69,58 +62,58 @@ session_start();
             // --- CẤU HÌNH NGƯỜI NHẬN ---
             $mail->addAddress($email, $name); // Gửi tới email của người đăng ký
 
-// --- CẤU HÌNH NỘI DUNG EMAIL XÁC NHẬN ---
-$mail->isHTML(true); // Thiết lập gửi mail định dạng HTML
+            // --- CẤU HÌNH NỘI DUNG EMAIL XÁC NHẬN ---
+            $mail->isHTML(true); // Thiết lập gửi mail định dạng HTML
 
-// 1. Tiêu đề Email
-$mail->Subject = '🎉 Đăng ký tài khoản thành công tại [Tên Website của bạn]';
+            // 1. Tiêu đề Email
+            $mail->Subject = '🎉 Đăng ký tài khoản thành công tại [Tên Website của bạn]';
 
-// 2. Nội dung Email (Sử dụng HTML/CSS inline để hiển thị đẹp mắt trên mọi thiết bị)
-$mail->Body = '
-<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden;">
-    <div style="background-color: #4CAF50; padding: 20px; text-align: center; color: white;">
-        <h2 style="margin: 0; font-size: 24px;">Chúc mừng đăng ký thành công!</h2>
-    </div>
-    
-    <div style="padding: 30px; line-height: 1.6; color: #333333;">
-        <p>Xin chào <strong>' . htmlspecialchars($name) . '</strong>,</p>
-        <p>Cảm ơn bạn đã đăng ký tài khoản tại hệ thống của chúng tôi. Tài khoản của bạn đã được khởi tạo thành công và sẵn sàng sử dụng.</p>
-        
-        <div style="background-color: #f9f9f9; border-left: 4px solid #4CAF50; padding: 15px; margin: 20px 0;">
-            <p style="margin: 0 0 8px 0;"><strong>Thông tin đăng nhập của bạn:</strong></p>
-            <p style="margin: 0 0 5px 0;">• <strong>Email đăng nhập:</strong> ' . htmlspecialchars($username) . '</p>
-        </div>
-        
-        <p>Hãy đăng nhập vào hệ thống và bắt đầu trải nghiệm ngay:</p>
-        
-        
-        
-        <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;">
-        <p style="font-size: 12px; color: #777;">Nếu nút trên không hoạt động, bạn có thể copy và dán đường dẫn này vào trình duyệt: <br>' . $login_url . '</p>
-    </div>
-    
-    <div style="background-color: #f1f1f1; padding: 15px; text-align: center; font-size: 12px; color: #777;">
-        <p style="margin: 0;">Đây là email tự động, vui lòng không phản hồi email này.</p>
-        <p style="margin: 5px 0 0 0;">© ' . date('Y') . ' [Tên Công Ty/Website của bạn]. All rights reserved.</p>
-    </div>
-</div>
-';
+            // 2. Nội dung Email (Sử dụng HTML/CSS inline để hiển thị đẹp mắt trên mọi thiết bị)
+            $mail->Body = '
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden;">
+                <div style="background-color: #4CAF50; padding: 20px; text-align: center; color: white;">
+                    <h2 style="margin: 0; font-size: 24px;">Chúc mừng đăng ký thành công!</h2>
+                </div>
+                
+                <div style="padding: 30px; line-height: 1.6; color: #333333;">
+                    <p>Xin chào <strong>' . htmlspecialchars($name) . '</strong>,</p>
+                    <p>Cảm ơn bạn đã đăng ký tài khoản tại hệ thống của chúng tôi. Tài khoản của bạn đã được khởi tạo thành công và sẵn sàng sử dụng.</p>
+                    
+                    <div style="background-color: #f9f9f9; border-left: 4px solid #4CAF50; padding: 15px; margin: 20px 0;">
+                        <p style="margin: 0 0 8px 0;"><strong>Thông tin đăng nhập của bạn:</strong></p>
+                        <p style="margin: 0 0 5px 0;">• <strong>Email đăng nhập:</strong> ' . htmlspecialchars($email) . '</p>
+                    </div>
+                    
+                    <p>Hãy đăng nhập vào hệ thống và bắt đầu trải nghiệm ngay:</p>
+                    
+                    
+                    
+                    <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;">
+                    <p style="font-size: 12px; color: #777;">Nếu nút trên không hoạt động, bạn có thể copy và dán đường dẫn này vào trình duyệt: <br>' . $login_url . '</p>
+                </div>
+                
+                <div style="background-color: #f1f1f1; padding: 15px; text-align: center; font-size: 12px; color: #777;">
+                    <p style="margin: 0;">Đây là email tự động, vui lòng không phản hồi email này.</p>
+                    <p style="margin: 5px 0 0 0;">© ' . date('Y') . ' [Tên Công Ty/Website của bạn]. All rights reserved.</p>
+                </div>
+            </div>
+            ';
 
-// 3. Nội dung thuần (AltBody) dành cho các trình đọc mail cũ không hỗ trợ HTML
-$mail->AltBody = "Xin chào " . $username . ",\n\nChúc mừng bạn đã đăng ký tài khoản thành công!\nThông tin đăng nhập:\n- Tên đăng nhập: " . $username . "\n- Email: " .$email . "\n\nTruy cập vào link sau để đăng nhập: " . $login_url;
+            // 3. Nội dung thuần (AltBody) dành cho các trình đọc mail cũ không hỗ trợ HTML
+            $mail->AltBody = "Xin chào " . $username . ",\n\nChúc mừng bạn đã đăng ký tài khoản thành công!\nThông tin đăng nhập:\n- Tên đăng nhập: " . $username . "\n- Email: " .$email . "\n\nTruy cập vào link sau để đăng nhập: " . $login_url;
 
-            // Tiến hành gửi
-            $mail->send();
-            echo 'Email đã được gửi thành công!';
-            
-        } catch (Exception $e) {
-            echo "Không thể gửi được email. Chi tiết lỗi: {$mail->ErrorInfo}";
-        }
-    }
-    catch (PDOException $e){
-        $error = 'Đã xảy ra lỗi hệ thống. Vui lòng thử lại sau!';
-    }
-  }
+                        // Tiến hành gửi
+                        $mail->send();
+                        echo 'Email đã được gửi thành công!';
+                        
+                    } catch (Exception $e) {
+                        echo "Không thể gửi được email. Chi tiết lỗi: {$mail->ErrorInfo}";
+                    }
+                }
+                catch (PDOException $e){
+                    $error = 'Đã xảy ra lỗi hệ thống. Vui lòng thử lại sau!';
+                }
+            }
 ?>
 
 <?php include '../partials/header.php'; ?>
@@ -156,9 +149,9 @@ $mail->AltBody = "Xin chào " . $username . ",\n\nChúc mừng bạn đã đăng
                         </div>
 
                         <div class="form-group row align-items-center mb-4">
-                            <label class="col-sm-4 font-weight-bold text-secondary mb-sm-0" for="sdt">SĐT <span class="text-danger">*</span></label>
+                            <label class="col-sm-4 font-weight-bold text-secondary mb-sm-0" for="phone">SĐT <span class="text-danger">*</span></label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control" id="sdt" name="sdt" placeholder="SĐT của bạn" value="<?= isset($sdt) ? htmlspecialchars($sdt) : '' ?>" />
+                                <input type="text" class="form-control" id="phone" name="phone" placeholder="SĐT của bạn" value="<?= isset($phone) ? htmlspecialchars($phone) : '' ?>" />
                             </div>
                         </div>
 
@@ -230,7 +223,7 @@ $mail->AltBody = "Xin chào " . $username . ",\n\nChúc mừng bạn đã đăng
                     required: true,
                     minlength: 10
                 },
-                sdt: {
+                phone: {
                     required: true,
                     number: true,
                     rangelength: [10, 10]
@@ -253,7 +246,7 @@ $mail->AltBody = "Xin chào " . $username . ",\n\nChúc mừng bạn đã đăng
             messages: {
                 name: "Bạn cần điền họ và tên",
                 diachi: "Bạn không được để trống địa chỉ",
-                sdt: "Bạn nhập sai sdt",
+                phone: "Bạn nhập sai sdt",
                 email: "Bạn nhập sai email",
                 password: "Bạn phải điền mật khẩu",
                 confirm_password: "Mật khẩu không khớp với mật khẩu đã nhập"

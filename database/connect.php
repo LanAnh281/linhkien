@@ -1,10 +1,10 @@
 <?php
 $servername = "localhost";
 $username = "root";
-$password = "#NguyenAnh1";
+$password = "";
 
 try {
-  $conn = new PDO("mysql:host=$servername;dbname=secondhand", $username, $password);
+  $conn = new PDO("mysql:host=$servername;dbname=linhkien", $username, $password);
   
 } catch(PDOException $e) {
   echo "Connection failed: " . $e->getMessage();

@@ -24,13 +24,13 @@ if (isset($_GET['search']) && !empty(trim($_GET['search']))) {
     $search = trim($_GET['search']);
     
     // Câu lệnh truy vấn lọc theo từ khóa tìm kiếm
-    $query = 'SELECT * FROM SANPHAM WHERE TenSanPham LIKE ?';
+    $query = 'SELECT * FROM SANPHAM WHERE tenSanPham LIKE ?';
     $sth = $conn->prepare($query);
     $sth->execute(["%$search%"]);
     $products = $sth->fetchAll(PDO::FETCH_ASSOC);
 } else {
     // BỔ SUNG: Nếu KHÔNG tìm kiếm, lấy ra TOÀN BỘ sản phẩm trong bảng
-    $query = 'SELECT * FROM SANPHAM ORDER BY IDSanPham DESC'; 
+    $query = 'SELECT * FROM SANPHAM ORDER BY sanPhamID DESC'; 
     $sth = $conn->prepare($query);
     $sth->execute();
     $products = $sth->fetchAll(PDO::FETCH_ASSOC);

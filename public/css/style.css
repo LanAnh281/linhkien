@@ -30,7 +30,7 @@
   margin: 0;
   font-size: 0.9rem;
   font-weight: 400;
-  color: var(--black-light);
+  /* color: var(--black-light); */
 }
 
 body{
@@ -414,4 +414,27 @@ html {
         .page-content {
             padding: 20px;
             flex-grow: 1; /* Chiếm nốt không gian còn lại bên dưới navbar */
+        }
+.cart-link {
+            position: relative; /* Làm gốc tọa độ cho thông báo nhỏ bên trong */
+            display: inline-block;
+            padding: 5px;
+            font-size: 20px; /* Phóng to kích thước icon giỏ hàng */
+            color: #d3d4db;
+            text-decoration: none;
+        }
+
+        /* Định dạng thông báo nhỏ (badge) trên đầu giỏ */
+        .cart-badge {
+            position: absolute;
+            top: -5px;       /* Đẩy lên phía trên đầu icon */
+            right: -8px;     /* Đẩy sang góc phải icon */
+            background-color: #0e5cf8; /* Màu nền đỏ nổi bật */
+            color: white;    /* Màu chữ trắng */
+            font-size: 11px; /* Cỡ chữ số nhỏ nhắn */
+            font-weight: bold;
+            border-radius: 50%; /* Bo tròn thành hình tròn */
+            padding: 2px 6px;  /* Tạo khoảng cách xung quanh số */
+            line-height: 1;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2); /* Tạo đổ bóng nhẹ cho đẹp */
         }
