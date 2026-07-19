@@ -368,3 +368,50 @@ html {
         .price { color: #e74c3c; font-weight: bold; }
 
       
+
+
+        /* Cấu trúc chia Layout tổng thể 3 : 9 */
+        .app-container {
+            display: grid;
+            grid-template-columns: 3fr 9fr; /* Sidebar 3 phần, Vùng nội dung 9 phần */
+            min-height: 100vh;
+        }
+
+        /* Vùng Cố định 1: Sidebar (3 phần) */
+        .sidebar {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
+        }
+        .sidebar a { color: #ecf0f1; text-decoration: none; display: block; padding: 10px 0; }
+
+        /* Vùng chứa lớn của phần bên phải (9 phần) */
+        .main-wrapper {
+            display: flex;
+            flex-direction: column; /* Xếp dọc: Navbar ở trên, Nội dung ở dưới */
+            background-color: #f8f9fa;
+        }
+
+        /* Vùng Cố định 2: Navbar (Nằm trong phần 9 phần) */
+        .navbar {
+            background-color: #ffffff;
+            padding: 15px 20px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between; /* Đẩy tiêu đề sang trái, user sang phải */
+            align-items: center;
+        }
+        .nav-user-zone { display: flex; align-items: center; gap: 20px; }
+        .notification { position: relative; cursor: pointer; }
+        .badge {
+            position: absolute; top: -5px; right: -8px;
+            background-color: red; color: white;
+            font-size: 11px; padding: 2px 5px; border-radius: 50%;
+        }
+        .user-profile { display: flex; align-items: center; gap: 8px; }
+
+        /* Vùng hiển thị nội dung thực tế của từng trang */
+        .page-content {
+            padding: 20px;
+            flex-grow: 1; /* Chiếm nốt không gian còn lại bên dưới navbar */
+        }

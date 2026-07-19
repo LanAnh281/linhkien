@@ -22,33 +22,27 @@ if (isset($_POST['email']) && isset($_POST['matkhau'])) {
          
             // Tạo SESSION 
             $_SESSION['username'] = $username;
-            $_SESSION['user_id'] = $row['id']; 
+            $_SESSION['user_id'] = $row['IDTaiKhoan']; 
             $_SESSION['logged_in_time'] = time();
+            $_SESSION['role'] = $row['VaiTro'];
             $_SESSION['success_message'] = 'Đăng nhập thành công!';
-            
+            echo  $_SESSION['role'];
             // Chuyển hướng sang trang chủ
-            header('Location: index.php');
-            exit(); // Bắt buộc phải có exit() sau header Location
+            if( $_SESSION['role']  =='user'){
+                header('Location: index.php');
+                exit();
+            }
+            else{
+                 header('Location: ../admin/dashboard/index.php');
+                 exit();
+            }
         } else {
             $error = 'Tên đăng nhập hoặc mật khẩu không đúng!';
         }
     }
 }
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trang chủ </title>
-    <link rel="stylesheet" href="../../../public/css/style.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://kit.fontawesome.com/7ccdb29924.js" crossorigin="anonymous"></script>
 
-<body>
 <?php include '../partials/header.php'; ?>
    
     <div class="container my-5">
@@ -65,7 +59,7 @@ if (isset($_POST['email']) && isset($_POST['matkhau'])) {
     <form id="loginForm" action="" method="post">
 
         <div class="form-group row text-center align-items-center">
-            <label class="col-sm-4 font-weight-bold text-secondary mb-sm-0" for="name">Họ và tên <span class="text-danger">*</span></label>
+            <label class="col-sm-4 font-weight-bold text-secondary mb-sm-0" for="name">Email <span class="text-danger">*</span></label>
             <div class="col-sm-8">           
                 <input type="text" class="form-control " 
                 id="eamil" placeholder="Nhập địa chỉ email" name="email">

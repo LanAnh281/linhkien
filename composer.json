@@ -1,0 +1,12 @@
+{
+    "name": "dell/linhkien",
+    "authors": [
+        {
+            "name": "LanAnh",
+            "email": "anh626801@gmail.com"
+        }
+    ],
+    "require": {
+        "phpmailer/phpmailer": "^7.1"
+    }
+}
