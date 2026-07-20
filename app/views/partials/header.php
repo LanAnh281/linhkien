@@ -49,7 +49,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
             <ul>
                 <li><a href="./index.php">Trang chủ</a></li>
                 <?php
-                    $query = 'SELECT * FROM LOAISANPHAM;';
+                    $query = 'SELECT * FROM DANHMUC;';
                     $stt = 1;
                     try {
                         $sth = $conn->query($query);
@@ -59,7 +59,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
                         while ($row = $sth->fetch()){
                             echo '
                                 <li>
-                                    <a class="dropdown-item" href="products.php?idloai='.$row['IDLoai'].'">'.$row['TenLoai'].'</a>
+                                    <a class="dropdown-item" href="products.php?danhMucId='.$row['danhMucId'].'">'.$row['tenDanhMuc'].'</a>
                                 </li>';
                         }   
                             echo ' </ul> </li>';

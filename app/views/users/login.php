@@ -21,7 +21,7 @@ if (isset($_POST['email']) && isset($_POST['matkhau'])) {
         if ($row = $sth->fetch(PDO::FETCH_ASSOC)) { 
          
             // Tạo SESSION 
-            $_SESSION['username'] = $row['hoTen'];
+            $_SESSION['userName'] = $row['hoTen'];
             $_SESSION['user_id'] = $row['nguoiDungId']; 
             $_SESSION['logged_in_time'] = time();
             $_SESSION['role'] = $row['tenVaiTro'];
