@@ -7,10 +7,11 @@ $error = '';
 if (isset($_POST['email']) && isset($_POST['matkhau'])) {
     $username = trim($_POST['email']); // Dùng trim() để bỏ dấu cách thừa ở 2 đầu
     $password = trim($_POST['matkhau']);
-    
+
     if (empty($username) || empty($password)) {
         $error = 'Vui lòng nhập đầy đủ tài khoản và mật khẩu!';
     } else {
+      
       // Tìm kiếm tài khoản
         $query = 'SELECT * FROM NGUOIDUNG nd JOIN VAITRO vt ON nd.vaiTroId = vt.vaiTroId WHERE nd.email = ? AND nd.matkhau = ?;';
         
@@ -22,11 +23,11 @@ if (isset($_POST['email']) && isset($_POST['matkhau'])) {
          
             // Tạo SESSION 
             $_SESSION['userName'] = $row['hoTen'];
-            $_SESSION['user_id'] = $row['nguoiDungId']; 
+            $_SESSION['userId'] = $row['nguoiDungId']; 
             $_SESSION['logged_in_time'] = time();
             $_SESSION['role'] = $row['tenVaiTro'];
             $_SESSION['success_message'] = 'Đăng nhập thành công!';
-            echo  $_SESSION['role'];
+           
             // Chuyển hướng sang trang chủ
             if( $_SESSION['role']  =='user'){
                 header('Location: index.php');
@@ -71,7 +72,7 @@ if (isset($_POST['email']) && isset($_POST['matkhau'])) {
             <div class="col-sm-8">          
                 <div class="input-group mx-auto">
                     <input type="password" class="form-control" 
-                   id="matkhau" placeholder="Nhập mật khẩu" name="matkhau">
+                        id="matkhau" placeholder="Nhập mật khẩu" name="matkhau">
                     <div class="input-group-append">
                     <span class="input-group-text bg-white border-left-0" id="togglePassword" style="cursor: pointer;">
                     <i class="fas fa-eye text-secondary"></i>

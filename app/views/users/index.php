@@ -1,5 +1,6 @@
 <?php  include_once "../../../database/connect.php"; 
     session_start();
+    
     if (isset($_SESSION['success_message'])): ?>
     <div class="alert alert-success alert-dismissible fade show mx-5 mt-3" role="alert">
         <i class="fas fa-check-circle mr-2"></i> 
@@ -24,13 +25,21 @@ if (isset($_GET['search']) && !empty(trim($_GET['search']))) {
     $search = trim($_GET['search']);
     
     // Câu lệnh truy vấn lọc theo từ khóa tìm kiếm
-    $query = 'SELECT * FROM SANPHAM WHERE tenSanPham LIKE ?';
+    $query = 'SELECT * FROM SANPHAM sp 
+            JOIN HINHANHSANPHAM ha ON sp.sanPhamId = ha.sanPhamId
+            JOIN THUONGHIEU th ON sp.thuongHieuId = th.thuongHieuId
+            WHERE tenSanPham LIKE ?';
     $sth = $conn->prepare($query);
     $sth->execute(["%$search%"]);
     $products = $sth->fetchAll(PDO::FETCH_ASSOC);
 } else {
-    // BỔ SUNG: Nếu KHÔNG tìm kiếm, lấy ra TOÀN BỘ sản phẩm trong bảng
-    $query = 'SELECT * FROM SANPHAM ORDER BY sanPhamID DESC'; 
+    // Nếu KHÔNG tìm kiếm, lấy ra TOÀN BỘ sản phẩm trong bảng
+    $query = 'SELECT sp.*, MIN(ha.hinhAnhId) as hinhAnhId, ha.duongDan, th.tenThuongHieu
+             FROM SANPHAM sp 
+            JOIN THUONGHIEU th ON sp.thuongHieuId = th.thuongHieuId 
+            LEFT JOIN HINHANHSANPHAM ha ON sp.sanPhamId = ha.sanPhamId  
+            GROUP BY sp.sanPhamId 
+            ORDER BY sp.sanPhamID DESC;'; 
     $sth = $conn->prepare($query);
     $sth->execute();
     $products = $sth->fetchAll(PDO::FETCH_ASSOC);
@@ -44,8 +53,6 @@ if (isset($_GET['search']) && !empty(trim($_GET['search']))) {
         <!-- Khu vực hiển thị nội dung chính / Danh sách sản phẩm -->
         <main class="articles">
             <h3>Sản Phẩm Nổi Bật</h3>
-          
-                
            <?php if (!empty($search)): ?>
             <h2>Kết quả tìm kiếm cho từ khóa: "<span style="color: #007bff;"><?php echo htmlspecialchars($search); ?></span>"</h2>
             <?php else: ?>
@@ -54,13 +61,14 @@ if (isset($_GET['search']) && !empty(trim($_GET['search']))) {
 
             <?php if (!empty($products)): ?>
                 <div class="grid-products" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; margin-top: 20px;">
-                    
                     <?php foreach ($products as $row): ?>
                         <div class="product-card" style="border: 1px solid #ddd; padding: 15px; border-radius: 8px; text-align: center;">
-                            <a href="product_detail.php?id=<?php echo $row['id']; ?>" style="text-decoration: none; color: inherit;">
-                                <img src="/linhkien/public/images/<?php echo htmlspecialchars($row['HinhAnh'] ?? 'default.jpg'); ?>" style="max-width: 100%; height: 180px; object-fit: contain;">
-                                <h3 style="font-size: 16px; margin: 10px 0;"><?php echo htmlspecialchars($row['TenSanPham']); ?></h3>
-                                <p style="color: red; font-weight: bold;"><?php echo number_format($row['Gia'], 0, ',', '.'); ?> đ</p>
+                            <a href="product_items.php?sanPhamId=<?php echo $row['sanPhamId']; ?> & danhMucId= <?php echo $row['danhMucId'] ?>" style="text-decoration: none; color: inherit;">
+                                <img src="../../../public/<?php echo htmlspecialchars($row['duongDan'] ?? 'default.jpg'); ?>" style="max-width: 100%; height: 180px; object-fit: contain;">
+                                <h3 style="font-size: 16px; margin: 10px 0;"><?php echo htmlspecialchars($row['tenSanPham']); ?></h3>
+                                <p style="color: red; font-weight: bold;">Thương hiệu: <?php echo $row['tenThuongHieu']; ?></p>
+                                <p style="color: red; font-weight: bold;">Giá bán lẻ: <?php echo number_format($row['giaBanLe'], 0, ',', '.'); ?> đ</p>
+                                <p style="color: red; font-weight: bold;">Giá bán sỉ: <?php echo number_format($row['giaBanSi'], 0, ',', '.'); ?> đ</p>
                             </a>
                         </div>
                     <?php endforeach; ?>
